@@ -6,3 +6,5 @@ open-webui_data/
 *.bak
 lab-stacks/segment-3-hybrid-sync/experiments.jsonl
 soc_triage_audit.jsonl
+data/triage_stdout.log
+data/triage_stderr.log
