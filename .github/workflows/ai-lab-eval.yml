@@ -9,6 +9,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Install Test Dependencies
+        run: pip install fastapi httpx uvicorn pydantic
+      - name: Run FastAPI Integration Suite
+        run: python3 lab-stacks/segment-3-hybrid-sync/test_api_integration.py
       - name: Run Dual-Gate & Adversarial Eval
         run: python3 lab-stacks/segment-4-edge-hpc/evaluate_edge_triage.py
       - name: Run HPC Batch Simulation
