@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+.venv/
+ollama_data/
+open-webui_data/
+*.bak

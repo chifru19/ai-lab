@@ -1,0 +1,8 @@
+edge_inference:
+  quantization: Q4_K_M
+  context_window: 4096
+  max_concurrent_streams: 2
+hpc_cluster:
+  mpi_enabled: false
+  gpu_acceleration: apple-metal
+  target_max_vram_gb: 16
