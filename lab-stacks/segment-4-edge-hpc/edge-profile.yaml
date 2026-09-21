@@ -1,8 +1,11 @@
-edge_inference:
-  quantization: Q4_K_M
-  context_window: 4096
-  max_concurrent_streams: 2
-hpc_cluster:
-  mpi_enabled: false
-  gpu_acceleration: apple-metal
-  target_max_vram_gb: 16
+profile_name: apple-silicon-metal-q4km
+hardware_target: Apple M-series Unified Memory
+max_vram_gb: 16
+quantization: Q4_K_M
+context_window: 4096
+inference_backend: ollama
+safety_ceiling_sec: 120
+dual_gate_policy:
+  gate_1_action: drop_noise
+  gate_2_action: route_to_local_llm
+  fallback_action: heuristic_bypass_0s
