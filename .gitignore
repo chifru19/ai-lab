@@ -4,3 +4,4 @@ __pycache__/
 ollama_data/
 open-webui_data/
 *.bak
+lab-stacks/segment-3-hybrid-sync/experiments.jsonl
