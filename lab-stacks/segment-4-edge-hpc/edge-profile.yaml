@@ -1,10 +1,18 @@
-profile_name: apple-silicon-metal-q4km
+profile_name: apple-silicon-metal-q4km-hpc
 hardware_target: Apple M-series Unified Memory
 max_vram_gb: 16
 quantization: Q4_K_M
 context_window: 4096
 inference_backend: ollama
 safety_ceiling_sec: 120
+
+hpc_throughput_tuning:
+  flash_attention: true
+  sliding_window_size: 2048
+  batch_size_soc: 32
+  kv_cache_type: "f16"
+  parallel_requests_max: 4
+
 dual_gate_policy:
   gate_1_action: drop_noise
   gate_2_action: route_to_local_llm
