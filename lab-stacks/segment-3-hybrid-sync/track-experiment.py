@@ -1,10 +1,7 @@
-import json
-import time
-import urllib.request
-from datetime import datetime, timezone
+import time, json, urllib.request, datetime
 
 log_entry = {
-    "timestamp": datetime.now(timezone.utc).isoformat(),
+    "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
     "model": "phi3:latest",
     "backend": "local-ollama",
     "prompt": "Summarize the value of a hybrid home/cloud AI lab in 2 sentences."
