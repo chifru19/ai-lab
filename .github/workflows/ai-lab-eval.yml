@@ -1,0 +1,17 @@
+name: AI-Lab Dual-Gate & HPC Validation
+on: [push, pull_request]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run Dual-Gate & Adversarial Eval
+        run: python3 lab-stacks/segment-4-edge-hpc/evaluate_edge_triage.py
+      - name: Run HPC Batch Simulation
+        run: python3 lab-stacks/segment-4-edge-hpc/batch_hpc_sim.py
+      - name: Output Telemetry Summary
+        run: python3 lab-stacks/segment-4-edge-hpc/summarize_metrics.py
