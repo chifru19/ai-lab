@@ -1,6 +1,6 @@
 {
-  "last_sync_timestamp": 1790061248.5197,
-  "latest_compaction_file": "data/cloud_sync_sink/batch_compaction_149efe2675b2.json",
+  "last_sync_timestamp": 1790062922.790509,
+  "latest_compaction_file": "data/cloud_sync_sink/batch_compaction_eb6c85449b68.json",
   "total_records_compacted": 7,
   "latest_digest": "9c662087579d18dccc6a18c7f59b81a825dbd04c659a43c77fb573bcebe9216f"
 }
