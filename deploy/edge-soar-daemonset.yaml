@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: edge-ai-soar-triage
+  namespace: security-edge
+  labels:
+    app.kubernetes.io/name: edge-ai-soar
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: edge-ai-soar
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: edge-ai-soar
+    spec:
+      containers:
+        - name: triage-daemon
+          image: ghcr.io/chifru19/ai-lab-triage:latest
+          env:
+            - name: SOAR_ENFORCEMENT_MODE
+              value: "active"
+            - name: OLLAMA_HOST
+              value: "http://localhost:11434"
+          ports:
+            - containerPort: 8000
+              name: http-api
+          resources:
+            limits:
+              cpu: "2"
+              memory: 4Gi
+            requests:
+              cpu: "500m"
+              memory: 1Gi
+          volumeMounts:
+            - name: audit-logs
+              mountPath: /data
+        - name: ollama-sidecar
+          image: ollama/ollama:latest
+          ports:
+            - containerPort: 11434
+              name: ollama
+      volumes:
+        - name: audit-logs
+          hostPath:
+            path: /var/log/ai-lab-audit
+            type: DirectoryOrCreate
