@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "==> Cleaning stale kind cluster..."
-kind delete cluster --name ai-lab 2>/dev/null || true
+CLUSTER_NAME="ai-lab"
+NAMESPACE="security-edge"
 
-echo "==> Creating fresh kind cluster..."
-kind create cluster --name ai-lab --config - <<KIND
+echo "==> Cleaning stale kind cluster context..."
+kind delete cluster --name "$CLUSTER_NAME" 2>/dev/null || true
+
+echo "==> Creating kind cluster..."
+cat <<KIND_EOF | kind create cluster --name "$CLUSTER_NAME" --config=-
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
@@ -14,23 +17,20 @@ nodes:
   - containerPort: 8000
     hostPort: 8000
     protocol: TCP
-KIND
+KIND_EOF
 
-kubectl config use-context kind-ai-lab
+echo "==> Ensuring namespace $NAMESPACE exists..."
+kubectl create namespace "$NAMESPACE" --dry-run=client -o yaml | kubectl apply -f -
 
-echo "==> Ensuring namespace security-edge exists..."
-kubectl create namespace security-edge --dry-run=client -o yaml | kubectl apply -f -
-
-echo "==> Applying Kubernetes manifests from deploy/..."
+echo "==> Applying Kubernetes manifests..."
 kubectl apply -f deploy/
 
 echo "==> Waiting for DaemonSet rollout readiness..."
-kubectl rollout status daemonset/edge-ai-soar-triage -n security-edge --timeout=180s
+kubectl rollout status daemonset/edge-ai-soar-triage -n "$NAMESPACE" --timeout=180s
 
-echo "==> Waiting for pod scheduling index..."
 POD_NAME=""
 for i in {1..30}; do
-  POD_NAME=$(kubectl get pods -n security-edge -o jsonpath="{.items[0].metadata.name}" 2>/dev/null || true)
+  POD_NAME=$(kubectl get pods -n "$NAMESPACE" -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || true)
   if [[ -n "${POD_NAME:-}" ]]; then
     break
   fi
@@ -38,20 +38,15 @@ for i in {1..30}; do
 done
 
 echo "==> Target pod: $POD_NAME"
-
-CONTAINER_NAME=$(kubectl get pod -n security-edge "$POD_NAME" -o jsonpath="{.spec.containers[*].name}" | tr " " "
-" | grep -iE "ollama|sidecar" | head -n1 || true)
-if [[ -z "${CONTAINER_NAME:-}" ]]; then
-  CONTAINER_NAME="ollama-sidecar"
-fi
-echo "==> Target container: $CONTAINER_NAME"
-
-echo "==> Pulling model phi3:latest in $CONTAINER_NAME..."
-kubectl exec -n security-edge "$POD_NAME" -c "$CONTAINER_NAME" -- ollama pull phi3:latest || true
-
-echo "==> Verifying model list..."
-kubectl exec -n security-edge "$POD_NAME" -c "$CONTAINER_NAME" -- ollama list || true
+echo "==> Pulling phi3:latest via port-forward..."
+kubectl port-forward -n "$NAMESPACE" "$POD_NAME" 11434:11434 &
+PF_PID=$!
+sleep 3
+curl -s -X POST http://localhost:11434/api/pull -d '{"name": "phi3:latest"}' || true
+kill $PF_PID 2>/dev/null || true
 
 echo "==> Testing triage endpoint..."
-curl -i -X POST http://localhost:8000/v1/triage   -H "Content-Type: application/json"   -d '{"log_line": "Failed password for invalid user admin from 10.0.0.99 port 50000 ssh2"}'
+curl -i -X POST http://localhost:8000/v1/triage \
+  -H "Content-Type: application/json" \
+  -d '{"log_line": "Failed password for invalid user admin from 10.0.0.99 port 50000 ssh2"}'
 echo ""

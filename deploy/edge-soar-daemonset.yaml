@@ -17,6 +17,7 @@ spec:
       containers:
         - name: triage-daemon
           image: ghcr.io/chifru19/ai-lab-triage:latest
+          imagePullPolicy: IfNotPresent
           env:
             - name: SOAR_ENFORCEMENT_MODE
               value: "active"

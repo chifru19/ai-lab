@@ -1,0 +1,18 @@
+1790064360.197509|10.0.0.99|HIGH|0.98|MITIGATED
+1790064409.084904|10.0.0.99|HIGH|0.98|MITIGATED
+1790064444.968629|10.0.0.99|HIGH|0.98|MITIGATED
+1790064550.393517|10.0.0.99|HIGH|0.98|MITIGATED
+{"timestamp": 1790066160.1126301, "action": "BLOCK_IP", "target": "10.0.0.99", "score": 0.98}
+{"timestamp": 1790068518.0952141, "action": "BLOCK_IP", "target": "10.0.0.99", "score": 0.98}
+{"timestamp": 1790069699.034326, "action": "BLOCK_IP", "target": "10.0.0.99", "score": 0.98}
+{"timestamp": 1790069747.613452, "action": "BLOCK_IP", "target": "10.0.0.99", "score": 0.98}
+{"timestamp": 1790070921.857144, "action": "BLOCK_IP", "target": "10.0.0.99", "score": 0.98}
+{"timestamp": 1790071031.9110458, "action": "BLOCK_IP", "target": "10.0.0.99", "score": 0.98}
+{"timestamp": 1790071093.5141912, "action": "BLOCK_IP", "target": "10.0.0.99", "score": 0.98}
+{"timestamp": 1790071193.44463, "action": "BLOCK_IP", "target": "10.0.0.99", "score": 0.98}
+{"timestamp": 1790071542.799521, "action": "BLOCK_IP", "target": "10.0.0.99", "score": 0.98}
+{"timestamp": 1790080247.132041, "action": "BLOCK_IP", "target": "10.0.0.99", "score": 0.98}
+{"timestamp": 1790080356.564427, "action": "BLOCK_IP", "target": "10.0.0.99", "score": 0.98}
+{"timestamp": 1790081056.873951, "action": "BLOCK_IP", "target": "10.0.0.99", "score": 0.98}
+{"timestamp": 1790081242.1775308, "action": "BLOCK_IP", "target": "10.0.0.99", "score": 0.98}
+{"timestamp": 1790081719.228203, "action": "BLOCK_IP", "target": "10.0.0.99", "score": 0.98}
