@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ai-lab-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+
+  triage-daemon:
+    image: python:3.11-slim
+    container_name: ai-lab-triage-4gate
+    working_dir: /app
+    volumes:
+      - ../../../lab-stacks:/app/lab-stacks
+      - ../../../data:/app/data
+    environment:
+      - PYTHONPATH=/app
+      - OLLAMA_HOST=http://ollama:11434
+      - SOAR_ENFORCEMENT_MODE=active
+    command: >
+      bash -c "pip install fastapi uvicorn pydantic httpx &&
+               python -m uvicorn lab-stacks.segment-4-edge-hpc.4gate-soar.main:app --host 0.0.0.0 --port 8000"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - ollama
+    restart: unless-stopped
+
+volumes:
+  ollama_data:
